@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>تفعيل الإشعارات - مختار</title>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "94fea8e5-9c9b-416b-88d6-082f017d2f2a",
+        notifyButton: {
+          enable: true
+        }
+      });
+
+      // ننتظر الاشتراك ونعرض الـ user ID
+      OneSignal.on('subscriptionChange', async function(isSubscribed) {
+        if (isSubscribed) {
+          const userId = await OneSignal.getUserId();
+          document.getElementById("result").innerText = "رمز الإشعارات الخاص بك هو:\n" + userId;
+        } else {
+          document.getElementById("result").innerText = "لم يتم الاشتراك بعد.";
+        }
+      });
+    });
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      direction: rtl;
+    }
+    h2 {
+      color: #333;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #006400;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h2>اضغط على زر "السماح" لتفعيل الإشعارات</h2>
+  <p>بعد التفعيل، سيظهر لك رمز خاص بالجهاز، قم بنسخه وضعه في تطبيق واصل .</p>
+  <div id="result">...في انتظار التفعيل</div>
+</body>
+</html>
