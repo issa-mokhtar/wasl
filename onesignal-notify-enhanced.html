@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>تفعيل الإشعارات - مختار</title>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      try {
+        await OneSignal.init({
+          appId: "94fea8e5-9c9b-416b-88d6-082f017d2f2a",
+          notifyButton: { enable: false }
+        });
+
+        document.getElementById("subscribeBtn").addEventListener("click", async () => {
+          try {
+            await OneSignal.showSlidedownPrompt();
+            document.getElementById("status").innerText = "جاري معالجة الإذن...";
+          } catch (error) {
+            document.getElementById("status").innerText = "حدث خطأ أثناء طلب الإذن.";
+            console.error("Prompt error:", error);
+          }
+        });
+
+        OneSignal.on('subscriptionChange', async function(isSubscribed) {
+          if (isSubscribed) {
+            const userId = await OneSignal.getUserId();
+            document.getElementById("status").innerText = "✅ تم التفعيل بنجاح!";
+            document.getElementById("result").innerText = "رمز الإشعارات الخاص بك:\n" + userId;
+          } else {
+            document.getElementById("status").innerText = "❌ لم يتم الاشتراك في الإشعارات.";
+          }
+        });
+
+      } catch (e) {
+        document.getElementById("status").innerText = "فشل في تهيئة OneSignal.";
+        console.error("Init error:", e);
+      }
+    });
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      direction: rtl;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      color: #333;
+    }
+    #subscribeBtn {
+      padding: 12px 25px;
+      font-size: 18px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    #subscribeBtn:hover {
+      background-color: #218838;
+    }
+    #status {
+      margin-top: 20px;
+      font-size: 17px;
+      color: #cc0000;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #004085;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h2>اضغط على الزر لتفعيل الإشعارات</h2>
+  <button id="subscribeBtn">تفعيل الإشعارات</button>
+  <div id="status">في انتظار التفاعل...</div>
+  <div id="result"></div>
+</body>
+</html>
