@@ -10,15 +10,18 @@
       await OneSignal.init({
         appId: "94fea8e5-9c9b-416b-88d6-082f017d2f2a",
         notifyButton: {
-          enable: true
+          enable: false
         }
       });
 
-      // ننتظر الاشتراك ونعرض الـ user ID
+      document.getElementById("subscribeBtn").addEventListener("click", async () => {
+        await OneSignal.showSlidedownPrompt(); // يعرض نافذة السماح
+      });
+
       OneSignal.on('subscriptionChange', async function(isSubscribed) {
         if (isSubscribed) {
           const userId = await OneSignal.getUserId();
-          document.getElementById("result").innerText = "رمز الإشعارات الخاص بك هو:\n" + userId;
+          document.getElementById("result").innerText = "رمز الإشعار الخاص بك:\n" + userId;
         } else {
           document.getElementById("result").innerText = "لم يتم الاشتراك بعد.";
         }
@@ -35,6 +38,18 @@
     h2 {
       color: #333;
     }
+    #subscribeBtn {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #subscribeBtn:hover {
+      background-color: #0056b3;
+    }
     #result {
       margin-top: 30px;
       font-size: 18px;
@@ -44,8 +59,8 @@
   </style>
 </head>
 <body>
-  <h2>اضغط على زر "السماح" لتفعيل الإشعارات</h2>
-  <p>بعد التفعيل، سيظهر لك رمز خاص بالجهاز، قم بنسخه وضعه في تطبيق واصل .</p>
-  <div id="result">...في انتظار التفعيل</div>
+  <h2>لتفعيل الإشعارات اضغط الزر أدناه</h2>
+  <button id="subscribeBtn">تفعيل الإشعارات</button>
+  <div id="result">لم يتم التفعيل بعد...</div>
 </body>
 </html>
